@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage } from 'react-native';
+import { StyleSheet, Text, KeyboardAvoidingView, Modal, TextInput, TouchableOpacity, AsyncStorage, ScrollView, View} from 'react-native';
 
 import ApiUtils from '../../api/ApiUtils';
 
@@ -7,6 +7,7 @@ export default class LoginScreen extends React.Component {
   state = {
     code: '',
     mdp: '',
+    modalOpen: true,
   }
 
   componentWillMount() {
@@ -22,6 +23,7 @@ export default class LoginScreen extends React.Component {
   }
 
   _login = async () => {
+    this.setState({ modalOpen: false })
     let res = await ApiUtils.login(this.state.code, this.state.mdp);
     // let res = await ApiUtils.login("kc791164", "x62986");
     console.log(res.iwcp.loginResponse.appToken)
@@ -34,30 +36,52 @@ export default class LoginScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Code accès étudiant</Text>
-        <TextInput style={styles.input} value={this.state.code} onChangeText={(code) => this.setState({ code })}/>
-        <Text>Mot de Passe</Text>
-        <TextInput style={styles.input} value={this.state.mdp} onChangeText={(mdp) => this.setState({ mdp })}/>
-        <TouchableOpacity onPress={this._login}>
-          <Text>connexion</Text>
-        </TouchableOpacity>
+      <View style={styles.outerContainer}>
+        {/*<Modal animationType="fade" visible={this.state.modalOpen} onRequestClose={() => this.setState({ modalOpen: false })}>*/}
+          <KeyboardAvoidingView behavior="height" style={styles.container}>
+            <Text>Code utilisateur</Text>
+            <TextInput
+              style={styles.input}
+              value={this.state.code}
+              onChangeText={(code) => this.setState({ code })}
+              returnKeyType="done"
+              autoCapitalize={"none"}
+            />
+            <Text>Mot de Passe</Text>
+            <TextInput
+              style={styles.input}
+              value={this.state.mdp}
+              onChangeText={(mdp) => this.setState({ mdp })}
+              returnKeyType="done"
+              autoCapitalize={"none"}
+              secureTextEntry
+            />
+            <TouchableOpacity onPress={this._login}>
+              <Text>connexion</Text>
+            </TouchableOpacity>
+          </KeyboardAvoidingView>
+        {/*</Modal>*/}
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  outerContainer: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
   input: {
     height: 50,
     fontSize: 14,
     color: 'black',
     borderColor: 'gray',
+    textAlign: 'center',
   }
 });

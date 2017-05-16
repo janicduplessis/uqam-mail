@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, FlatList } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, FlatList, ActivityIndicator } from 'react-native';
 
 import ApiUtils from '../../api/ApiUtils';
 
@@ -19,7 +19,7 @@ export default class Inbox extends React.Component {
     <TouchableOpacity
       key={data.index}
       onPress={() => navigate('ViewMessage', { message: data.item } )}
-      style={styles.cell}
+      style={[styles.cell, data.item.seen ? {} : {backgroundColor: '#fcf9ae'}]}
     >
       <Text style={styles.sender}>{data.item.sender}</Text>
       <Text style={styles.title}>{data.item.title}</Text>
@@ -35,12 +35,17 @@ export default class Inbox extends React.Component {
     let res = await ApiUtils.getEmails(token);
     let resText = await res.text();
     let obj = eval(resText.substring(10,resText.length));
-    let emails = obj[6].map((email) => {return { id: email[0], sender: email[4], title: email[5] }});
+    let emails = obj[6].map((email) => {return { id: email[0], sender: email[4], title: email[5], seen: email[3] === (0 || 32) ? false:true }});
     this.setState({ emails })
   }
 
   render() {
     const { emails } = this.state;
+
+    if (emails.length === 0) {
+      return(<View style={styles.view}><ActivityIndicator /></View>)
+    }
+
     return (
       <FlatList
         data={emails}
@@ -58,6 +63,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  view: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
   },
   cell: {
     height: 100,
