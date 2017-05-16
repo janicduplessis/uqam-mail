@@ -35,7 +35,10 @@ export default class Inbox extends React.Component {
     let res = await ApiUtils.getEmails(token);
     let resText = await res.text();
     let obj = eval(resText.substring(10,resText.length));
-    let emails = obj[6].map((email) => {return { id: email[0], sender: email[4], title: email[5], seen: email[3] === (0 || 32) ? false:true }});
+    let emails = obj[6].map((email) => {
+      let seen = !(email[3] === 0 || email[3] === 32);
+      return { id: email[0], sender: email[4], title: email[5], seen }
+    });
     this.setState({ emails })
   }
 
