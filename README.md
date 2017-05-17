@@ -8,9 +8,11 @@ Alors essayer mon client mobile fonctionnant avec Expo:
 
 https://expo.io/@valiums/uqam-mail
 
+Features Actuelle:
+consulter des courriels.
 
-
-
+TODO:
+Envoit de courriel.
 
 
 **Pour les gens qui ne connaissent pas Expo:
