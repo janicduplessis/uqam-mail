@@ -13,6 +13,7 @@ consulter des courriels.
 
 TODO:
 Envoie de courriel.
+Supprimer des courriels.
 
 
 **Pour les gens qui ne connaissent pas Expo:
