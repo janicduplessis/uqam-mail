@@ -173,9 +173,7 @@ export default class Inbox extends React.Component {
         onChange={(isOpen) => this._onCloseSideMenu(isOpen)}
       >
         <View>
-          {
-            this._renderSearchBar()
-          }
+          <Image source={require('../../assets/julien2.png')} />
           <FlatList
             data={filteredEmail}
             renderItem={this._renderItem}

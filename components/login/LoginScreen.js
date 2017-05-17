@@ -36,7 +36,7 @@ export default class LoginScreen extends React.Component {
   render() {
 
     return (
-      <View style={styles.outerContainer}>
+      <Image source={require('../../assets/reaz_phone.png')} style={styles.outerContainer}>
           <KeyboardAvoidingView behavior="position" style={styles.container}>
             <Image
               style={styles.uqam}
@@ -69,7 +69,7 @@ export default class LoginScreen extends React.Component {
           <TouchableOpacity onPress={this._login} style={styles.connect}>
             <Text style={styles.connectText}>connexion</Text>
           </TouchableOpacity>
-      </View>
+      </Image>
     );
   }
 }
@@ -77,7 +77,9 @@ export default class LoginScreen extends React.Component {
 const styles = StyleSheet.create({
   outerContainer: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
+    width: null,
+    height: null,
   },
   container: {
     flex: 1,
