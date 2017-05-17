@@ -31,6 +31,7 @@ export default class Inbox extends React.Component {
     searchTerm: '',
     loading: false,
     isSideMenuOpen: false,
+    startIndex: 0,
   }
 
   _keyExtractor = (item, index) => item.id;
@@ -63,7 +64,7 @@ export default class Inbox extends React.Component {
   _getEmails = async () => {
     this.setState({ loading: true });
     let token = await AsyncStorage.getItem('token');
-    let res = await ApiUtils.getEmails(token);
+    let res = await ApiUtils.getEmails(token, this.state.startIndex);
     let resText = await res.text();
     let obj = eval(resText.substring(10,resText.length));
     let emails = obj[6].map((email) => {
@@ -116,6 +117,12 @@ export default class Inbox extends React.Component {
     navigate('Login');
   }
 
+  _getMoreEmails = () => {
+    let newStartIndex = this.state.startIndex;
+    newStartIndex += 10;
+    this.setState({ startIndex: newStartIndex }, this._getEmails);
+  }
+
 
   render() {
     const { emails, isSideMenuOpen } = this.state;
@@ -123,9 +130,7 @@ export default class Inbox extends React.Component {
     if (emails.length === 0) {
       return(<View style={styles.view}><ActivityIndicator /></View>)
     }
-
     const filteredEmail = this._filterEmails();
-
     return (
       <SideMenu
         menu={
@@ -148,6 +153,8 @@ export default class Inbox extends React.Component {
             contentContainerStyle={styles.content}
             refreshing={this.state.loading}
             onRefresh={this._getEmails}
+            onEndReached={this._getMoreEmails}
+            onEndReachedThreshold={0.25}
           />
       </View>
     </SideMenu>
@@ -194,6 +201,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderWidth: 1,
     borderColor: 'lightgray',
-
   }
 });

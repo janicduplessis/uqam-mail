@@ -25,7 +25,9 @@ export default class Menu extends React.Component {
     return (
       <View style={styles.outerContainer}>
         <TouchableOpacity onPress={this.props.onPressDisconnect}>
-          <Text>Déconnexion</Text>
+          <Text style={styles.item}>Nouveau Message</Text>
+          <Text style={styles.item}>À Propos</Text>
+          <Text style={styles.item}>Déconnexion</Text>
         </TouchableOpacity>
       </View>
     );
@@ -40,5 +42,12 @@ const styles = StyleSheet.create({
     borderColor: 'lightgray',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#0195df',
   },
+  item: {
+    fontWeight: 'bold',
+    color: 'white',
+    fontSize: 22,
+    marginBottom: 20,
+  }
 });

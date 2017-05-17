@@ -14,17 +14,21 @@ class ApiUtils {
     return result;
   }
 
-  async getEmails(token) {
+  async getEmails(token, start) {
+    let debut = 0;
+    if (start) {
+      debut = start;
+    }
     let params = {
       rev:3,
       sid:'',
       mbox:'INBOX',
-      count:100,
+      count:10 + debut,
       date:true,
       lang:'recv',
       sortby:'recv',
       sortorder:'R',
-      start:0,
+      start: 0,
       srch:'UNDELETED',
       token: token,
     }
