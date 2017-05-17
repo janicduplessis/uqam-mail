@@ -65,10 +65,10 @@ export default class LoginScreen extends React.Component {
             {
               this.state.error ? <Text style={styles.error}>Connexion Refusé</Text> : null
             }
-          <TouchableOpacity onPress={this._login} style={styles.connect}>
-              <Text style={styles.connectText}>connexion</Text>
-            </TouchableOpacity>
           </KeyboardAvoidingView>
+          <TouchableOpacity onPress={this._login} style={styles.connect}>
+            <Text style={styles.connectText}>connexion</Text>
+          </TouchableOpacity>
       </View>
     );
   }
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   },
   connect: {
     alignSelf: 'center',
-    marginTop: 30,
+    marginTop: 0,
     marginBottom: 50,
     height: 30,
     width: 100,

@@ -11,14 +11,14 @@ export default class Inbox extends React.Component {
     return {
       title: 'Vos messages',
       headerRight:
-        <TouchableOpacity style={{ marginRight: 10 }} onPress={() => setParams({ search: state.params ? !state.params.search : true })}>
+        <TouchableOpacity style={{ marginRight: 10 }} onPress={() => setParams({ search: !state.params.search})}>
           <Image
             source={{uri: 'https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/search-128.png'}}
             style={{ width: 28, height: 28}}
           />
         </TouchableOpacity>,
       headerLeft:
-        <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => setParams({ isSideMenuOpen: state.params ? !state.params.isSideMenuOpen : true })}>
+        <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => setParams({ isSideMenuOpen: !state.params.isSideMenuOpen })}>
           <Image
             source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/220px-Hamburger_icon.svg.png'}}
             style={{ width: 28, height: 28}}
@@ -32,6 +32,7 @@ export default class Inbox extends React.Component {
     loading: false,
     isSideMenuOpen: false,
     startIndex: 0,
+    firstSearch: true,
   }
 
   _keyExtractor = (item, index) => item.id;
@@ -49,6 +50,7 @@ export default class Inbox extends React.Component {
   }
 
   componentWillMount() {
+    this.props.navigation.setParams({ search: false, isSideMenuOpen: false, })
     this._getEmails();
   }
 
@@ -67,6 +69,10 @@ export default class Inbox extends React.Component {
     let res = await ApiUtils.getEmails(token, this.state.startIndex);
     let resText = await res.text();
     let obj = eval(resText.substring(10,resText.length));
+    if (obj.length < 4) {
+      // error
+      this.setState({ loading: false });
+    }
     let emails = obj[6].map((email) => {
       let seen = !(email[3] === 0 || email[3] === 32);
       this.setState({ loading: false });
@@ -79,6 +85,10 @@ export default class Inbox extends React.Component {
     const { params } = this.props.navigation.state;
     if (params) {
       if (params.search) {
+        if (this.state.firstSearch) {
+          // just to download more email
+          this.setState({ startIndex: 100, firstSearch: false },this._getEmails);
+        }
         return <TextInput
           placeholder="Rechercher un courriel"
           style={styles.searchInput}
@@ -88,10 +98,11 @@ export default class Inbox extends React.Component {
           autoCapitalize={"none"}
           underlineColorAndroid="transparent"
           autoFocus
+          onEndEditing={() => this.props.navigation.setParams({ search: false })}
         />
       } else {
         if (this.state.searchTerm.length) {
-          setTimeout(() => { this.setState({ searchTerm: '' }); }, 20);
+          //setTimeout(() => { this.setState({ searchTerm: '' }); }, 20);
         }
       }
 
@@ -171,9 +182,13 @@ export default class Inbox extends React.Component {
             keyExtractor={this._keyExtractor}
             contentContainerStyle={styles.content}
             refreshing={this.state.loading}
-            onRefresh={this._getEmails}
+            onRefresh={() => {
+              this._getEmails();
+              // too long request :
+              setTimeout(() => { this.setState({ loading: false }); }, 8000);
+            }}
             onEndReached={this._getMoreEmails}
-            onEndReachedThreshold={0.25}
+            onEndReachedThreshold={0.50}
           />
       </View>
     </SideMenu>

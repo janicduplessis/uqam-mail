@@ -1,8 +1,8 @@
 {
   "name": "uqam-mail",
-  "version": "0.0.0",
-  "description": "Hello Expo!",
-  "author": null,
+  "version": "0.0.1",
+  "description": "A Mobile client for University Of Quebec At Montréal`s email system.",
+  "author": "Valium",
   "private": true,
   "main": "main.js",
   "dependencies": {

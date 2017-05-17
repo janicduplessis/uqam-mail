@@ -1,6 +1,6 @@
 {
   "name": "uqam-mail",
-  "description": "An empty new project",
+  "description": "A Mobile client for University Of Quebec At Montréal`s email system.",
   "slug": "uqam-mail",
   "privacy": "public",
   "sdkVersion": "16.0.0",

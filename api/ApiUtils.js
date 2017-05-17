@@ -23,7 +23,7 @@ class ApiUtils {
       rev:3,
       sid:'',
       mbox:'INBOX',
-      count:10 + debut,
+      count: 25 + debut,
       date:true,
       lang:'recv',
       sortby:'recv',

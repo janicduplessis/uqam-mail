@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
 });
 
 const AppNavigator = StackNavigator({
-  Inbox: { screen: Inbox },
+  Inbox: { screen: Inbox  },
   ViewMessage: { screen: ViewMessageScreen },
   Login: { screen: Login },
   About: { screen: About },
