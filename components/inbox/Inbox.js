@@ -1,5 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, AsyncStorage, FlatList, ActivityIndicator, Button, Image } from 'react-native';
+import SideMenu from 'react-native-side-menu';
+import Menu from './Menu';
 
 import ApiUtils from '../../api/ApiUtils';
 
@@ -14,12 +16,21 @@ export default class Inbox extends React.Component {
             source={{uri: 'https://cdn2.iconfinder.com/data/icons/ios-7-icons/50/search-128.png'}}
             style={{ width: 28, height: 28}}
           />
+        </TouchableOpacity>,
+      headerLeft:
+        <TouchableOpacity style={{ marginLeft: 10 }} onPress={() => setParams({ isSideMenuOpen: state.params ? !state.params.isSideMenuOpen : true })}>
+          <Image
+            source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/220px-Hamburger_icon.svg.png'}}
+            style={{ width: 28, height: 28}}
+          />
         </TouchableOpacity>
       }
   };
   state = {
     emails: [],
     searchTerm: '',
+    loading: false,
+    isSideMenuOpen: false,
   }
 
   _keyExtractor = (item, index) => item.id;
@@ -50,15 +61,17 @@ export default class Inbox extends React.Component {
   }
 
   _getEmails = async () => {
+    this.setState({ loading: true });
     let token = await AsyncStorage.getItem('token');
     let res = await ApiUtils.getEmails(token);
     let resText = await res.text();
     let obj = eval(resText.substring(10,resText.length));
     let emails = obj[6].map((email) => {
       let seen = !(email[3] === 0 || email[3] === 32);
+      this.setState({ loading: false });
       return { id: email[0], sender: email[4], title: email[5], seen }
     });
-    this.setState({ emails })
+    this.setState({ emails, loading: false });
   }
 
   _renderSearchBar = () => {
@@ -96,9 +109,16 @@ export default class Inbox extends React.Component {
     }
   }
 
-  render() {
-    const { emails } = this.state;
 
+  async _onPressDisconnect() {
+    const { navigate } = this.props.navigation;
+    await AsyncStorage.removeItem('token');
+    navigate('Login');
+  }
+
+
+  render() {
+    const { emails, isSideMenuOpen } = this.state;
 
     if (emails.length === 0) {
       return(<View style={styles.view}><ActivityIndicator /></View>)
@@ -107,17 +127,30 @@ export default class Inbox extends React.Component {
     const filteredEmail = this._filterEmails();
 
     return (
-      <View>
-        {
-          this._renderSearchBar()
-        }
-        <FlatList
-          data={filteredEmail}
-          renderItem={this._renderItem}
-          keyExtractor={this._keyExtractor}
-          contentContainerStyle={styles.content}
-        />
-    </View>
+      <SideMenu
+        menu={
+          <Menu
+            isOpen={this.props.navigation.state.params ? this.props.navigation.state.params.isSideMenuOpen : false}
+            onPressDisconnect={() => this._onPressDisconnect()}
+        />}
+        disableGestures
+        isOpen={this.props.navigation.state.params ? this.props.navigation.state.params.isSideMenuOpen : false}
+        onChange={(isOpen) => this.props.navigation.setParams({ isSideMenuOpen: isOpen })}
+      >
+        <View>
+          {
+            this._renderSearchBar()
+          }
+          <FlatList
+            data={filteredEmail}
+            renderItem={this._renderItem}
+            keyExtractor={this._keyExtractor}
+            contentContainerStyle={styles.content}
+            refreshing={this.state.loading}
+            onRefresh={this._getEmails}
+          />
+      </View>
+    </SideMenu>
     );
   }
 }

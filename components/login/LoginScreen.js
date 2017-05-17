@@ -5,7 +5,7 @@ import ApiUtils from '../../api/ApiUtils';
 
 export default class LoginScreen extends React.Component {
   static navigationOptions = {
-    title: 'Courriel Mobile UQAM',
+    header: null,
   };
   state = {
     code: '',
@@ -14,17 +14,6 @@ export default class LoginScreen extends React.Component {
     error: false,
   }
 
-  componentWillMount() {
-    this._checkToken();
-  }
-
-  _checkToken = async () => {
-    const { navigate } = this.props.navigation;
-    let token = await AsyncStorage.getItem('token');
-    if (token) {
-      navigate('Inbox');
-    }
-  }
 
   _login = async () => {
     this.setState({ modalOpen: false, error: false })
@@ -36,7 +25,12 @@ export default class LoginScreen extends React.Component {
     let indexOfEuqal = res.iwcp.loginResponse.appToken.indexOf("=");
     let token = res.iwcp.loginResponse.appToken.substring(indexOfEuqal+1, res.iwcp.loginResponse.appToken.length);
     await AsyncStorage.setItem('token', token);
-    this._checkToken();
+    if (this.props.onLogin) {
+      this.props.onLogin();
+    } else {
+      const { navigate } = this.props.navigation;
+      navigate('Inbox');
+    }
   }
 
   render() {
