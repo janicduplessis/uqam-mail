@@ -5,6 +5,7 @@ import ApiUtils from '../../api/ApiUtils';
 
 type Props = {
   onPressDisconnect: Function,
+  onPressAbout: Function,
   isOpen: boolean,
 }
 
@@ -14,19 +15,20 @@ export default class Menu extends React.Component {
 
   }
 
-
-
   render() {
     if (this.props.isOpen === false) {
       return null;
     }
 
-
     return (
       <View style={styles.outerContainer}>
         <TouchableOpacity onPress={this.props.onPressDisconnect}>
           <Text style={styles.item}>Nouveau Message</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={this.props.onPressAbout}>
           <Text style={styles.item}>À Propos</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={this.props.onPressDisconnect}>
           <Text style={styles.item}>Déconnexion</Text>
         </TouchableOpacity>
       </View>

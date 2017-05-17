@@ -89,7 +89,12 @@ export default class Inbox extends React.Component {
           underlineColorAndroid="transparent"
           autoFocus
         />
+      } else {
+        if (this.state.searchTerm.length) {
+          setTimeout(() => { this.setState({ searchTerm: '' }); }, 20);
+        }
       }
+
     }
     return null;
   }
@@ -123,6 +128,19 @@ export default class Inbox extends React.Component {
     this.setState({ startIndex: newStartIndex }, this._getEmails);
   }
 
+  _onPressAbout = () => {
+    const { navigate, setParams } = this.props.navigation;
+    setParams({ isSideMenuOpen: false });
+    this.setState({ isSideMenuOpen: false });
+    setTimeout(() => { navigate('About'); }, 100);
+  }
+
+  _onCloseSideMenu = (isOpen) => {
+    if (isOpen === false) {
+      setTimeout(() => { this.props.navigation.setParams({ isSideMenuOpen: false }); }, 500);
+    }
+  }
+
 
   render() {
     const { emails, isSideMenuOpen } = this.state;
@@ -137,10 +155,11 @@ export default class Inbox extends React.Component {
           <Menu
             isOpen={this.props.navigation.state.params ? this.props.navigation.state.params.isSideMenuOpen : false}
             onPressDisconnect={() => this._onPressDisconnect()}
+            onPressAbout={() => this._onPressAbout()}
         />}
         disableGestures
         isOpen={this.props.navigation.state.params ? this.props.navigation.state.params.isSideMenuOpen : false}
-        onChange={(isOpen) => this.props.navigation.setParams({ isSideMenuOpen: isOpen })}
+        onChange={(isOpen) => this._onCloseSideMenu(isOpen)}
       >
         <View>
           {

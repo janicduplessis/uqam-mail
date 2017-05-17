@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, AsyncStorage } from 'react-native';
 import LoginScreen from './components/login/LoginScreen';
 import Inbox from './components/inbox/Inbox';
 import Login from './components/login/LoginScreen';
+import About from './components/about/About';
 import ViewMessageScreen from './components/inbox/ViewMessageScreen'
 import { StackNavigator } from 'react-navigation';
 import ApiUtils from './api/ApiUtils';
@@ -54,6 +55,7 @@ const AppNavigator = StackNavigator({
   Inbox: { screen: Inbox },
   ViewMessage: { screen: ViewMessageScreen },
   Login: { screen: Login },
+  About: { screen: About },
 });
 
 Expo.registerRootComponent(App);
