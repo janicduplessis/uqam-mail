@@ -12,7 +12,7 @@ Features Actuelle:
 consulter des courriels.
 
 TODO:
-Envoit de courriel.
+Envoie de courriel.
 
 
 **Pour les gens qui ne connaissent pas Expo:
