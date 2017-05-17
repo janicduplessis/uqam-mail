@@ -29,7 +29,7 @@ export default class ViewMessageScreen extends React.Component {
 
   _constructMessage = (obj) => {
     let msg = "";
-    obj[8].forEach((item) => console.log(item));
+    // obj[8].forEach((item) => console.log(item));
     for (let i = 0; i < obj[8].length; i += 1) {
       if (obj[8][i][1] === 'text/html') {
         msg = obj[8][i][6];
