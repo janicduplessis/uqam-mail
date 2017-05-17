@@ -18,5 +18,5 @@ Envoie de courriel.
 **Pour les gens qui ne connaissent pas Expo:
 https://expo.io/
 
-**Pour les gens qui ne connaissent pas React-Nave:
+**Pour les gens qui ne connaissent pas React-Native:
 https://facebook.github.io/react-native/
